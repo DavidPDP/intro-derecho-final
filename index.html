@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La plenitud del ordenamiento — Exposición</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bone:#F0EADE;
+    --ink:#211A16;
+    --oxblood:#6A1420;
+    --oxblood-deep:#360A11;
+    --gold:#8F6A26;
+    --gold-bright:#C29A4E;
+    --slate:#6C665C;
+    --line:rgba(33,26,22,.15);
+    --serif:"Fraunces",Georgia,serif;
+    --sans:"Inter",system-ui,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,monospace;
+    --pad-y:clamp(34px,5vh,68px);
+    --pad-x:clamp(34px,5.4vw,92px);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:var(--sans);background:var(--ink);color:var(--ink);overflow:hidden;-webkit-font-smoothing:antialiased}
+
+  /* ---------- deck ---------- */
+  #deck{position:fixed;inset:0;background:var(--bone)}
+  .slide{
+    position:absolute;inset:0;display:flex;flex-direction:column;
+    padding:var(--pad-y) var(--pad-x);
+    opacity:0;visibility:hidden;transform:translateY(12px);
+    transition:opacity .45s ease,transform .45s ease,visibility .45s;overflow:hidden;
+    background:var(--bone);color:var(--ink);
+  }
+  .slide.active{opacity:1;visibility:visible;transform:none;z-index:2}
+  .slide.dark{background:radial-gradient(125% 125% at 82% -12%,#531019,var(--oxblood-deep) 70%);color:var(--bone)}
+  .slide:not(.dark)::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(110% 80% at 100% 0%,rgba(143,106,38,.05),transparent 55%),radial-gradient(80% 70% at 0% 100%,rgba(106,20,32,.04),transparent 55%)}
+
+  /* ---------- shared ---------- */
+  .eyebrow{font-family:var(--mono);font-size:clamp(10.5px,.95vw,13px);letter-spacing:.15em;text-transform:uppercase;color:var(--oxblood);display:flex;align-items:center;gap:.8em;font-weight:500}
+  .dark .eyebrow{color:var(--gold-bright)}
+  .eyebrow .tick{width:24px;height:1px;background:currentColor;opacity:.55;display:inline-block}
+  h1,h2,h3{font-family:var(--serif);font-weight:400;line-height:1.04;letter-spacing:-.016em}
+  .em{font-style:italic;color:var(--oxblood)}
+  .dark .em{color:var(--gold-bright)}
+  .case{font-family:var(--mono);font-weight:500;color:var(--oxblood);font-size:.88em;white-space:nowrap}
+  .dark .case{color:var(--gold-bright)}
+  .ref{font-family:var(--mono);font-size:.8em;color:var(--slate);font-weight:400}
+
+  .ghost{position:absolute;top:clamp(4px,1vh,16px);right:var(--pad-x);font-family:var(--serif);font-weight:300;line-height:1;font-size:clamp(110px,17vw,230px);color:var(--oxblood);opacity:.055;pointer-events:none;user-select:none;z-index:1}
+
+  /* ================= COVER ================= */
+  #cover{justify-content:center}
+  .cover-course{font-family:var(--mono);font-size:clamp(10.5px,1vw,13px);letter-spacing:.13em;text-transform:uppercase;color:rgba(240,234,222,.6);display:flex;flex-wrap:wrap;gap:.5em 1.1em;margin-bottom:clamp(26px,4.6vh,52px)}
+  .cover-course b{color:var(--gold-bright);font-weight:600}
+  #cover h1{font-size:clamp(38px,6.6vw,90px);letter-spacing:-.024em;color:var(--bone);max-width:15ch}
+  .strike{position:relative;display:inline-block;color:rgba(240,234,222,.5)}
+  .strike::after{content:"";position:absolute;left:-.04em;right:100%;top:52%;height:.055em;background:var(--gold-bright);border-radius:2px}
+  .slide.active .strike::after{animation:strike .95s cubic-bezier(.6,0,.2,1) .8s forwards}
+  @keyframes strike{to{right:-.04em}}
+  #cover h1 .live{color:var(--bone)}
+  #cover .sub{font-family:var(--serif);font-weight:300;font-style:italic;font-size:clamp(18px,2.2vw,30px);color:var(--gold-bright);margin-top:clamp(20px,2.8vh,32px);line-height:1.24;max-width:30ch}
+  .cover-meta{margin-top:clamp(32px,5.6vh,62px);display:flex;flex-wrap:wrap;gap:10px 32px;align-items:baseline;border-top:1px solid rgba(240,234,222,.16);padding-top:22px}
+  .authors{display:flex;flex-wrap:wrap;gap:6px 26px}
+  .author{font-weight:500;font-size:clamp(13px,1.2vw,16px);color:var(--bone)}
+  .author span{font-family:var(--mono);color:rgba(240,234,222,.5);font-weight:400;font-size:.82em;margin-left:.5em}
+  .cover-date{font-family:var(--mono);font-size:clamp(10.5px,1vw,13px);color:rgba(240,234,222,.55);letter-spacing:.05em;margin-left:auto}
+
+  /* ================= THESIS ================= */
+  #thesis .split{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(34px,5.5vw,86px);flex:1;align-items:center}
+  .thesis-lede{font-family:var(--serif);font-size:clamp(24px,3vw,44px);line-height:1.14;color:var(--bone)}
+  .thesis-lede .em{color:var(--gold-bright)}
+  .thesis-note{margin-top:24px;font-size:clamp(13px,1.15vw,16px);color:rgba(240,234,222,.72);line-height:1.55;max-width:46ch}
+  .thesis-note b{color:var(--gold-bright);font-weight:600}
+  .qlist{border-top:1px solid rgba(240,234,222,.18)}
+  .qrow{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:baseline;padding:clamp(14px,2vh,22px) 2px;border-bottom:1px solid rgba(240,234,222,.14)}
+  .qnum{font-family:var(--mono);font-size:clamp(12px,1.05vw,14px);color:var(--gold-bright);font-weight:700}
+  .qtxt{font-family:var(--serif);font-size:clamp(17px,1.7vw,24px);line-height:1.14;color:var(--bone)}
+  .qtxt b{color:var(--gold-bright);font-weight:500;font-style:italic}
+
+  /* ================= CONTENT ================= */
+  .qhead{display:flex;align-items:center;gap:14px;margin-bottom:clamp(14px,2.2vh,24px);position:relative;z-index:2;flex-wrap:wrap}
+  .pill{font-family:var(--mono);font-size:clamp(10.5px,.95vw,13px);letter-spacing:.13em;text-transform:uppercase;color:#fff;background:var(--oxblood);padding:5px 12px;border-radius:3px;font-weight:500}
+  .qsub{font-family:var(--mono);font-size:clamp(10.5px,.95vw,13px);letter-spacing:.1em;text-transform:uppercase;color:var(--slate)}
+  .content h2{font-size:clamp(25px,3.4vw,50px);max-width:23ch;position:relative;z-index:2;margin-bottom:clamp(8px,1.4vh,16px)}
+  .content-body{flex:1;display:flex;flex-direction:column;justify-content:center;gap:clamp(16px,2.6vh,28px);position:relative;z-index:2}
+
+  .points{display:flex;flex-direction:column;gap:clamp(13px,2vh,21px)}
+  .point{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:baseline}
+  .point .mk{width:8px;height:8px;border-radius:50%;border:1.5px solid var(--oxblood);margin-top:.55em;flex:none}
+  .point .mk.fill{background:var(--oxblood)}
+  .point p{font-size:clamp(14.5px,1.5vw,20px);line-height:1.46}
+  .point p b{font-weight:600;color:var(--oxblood)}
+
+  .synth{display:inline-block;font-family:var(--serif);font-size:clamp(15px,1.6vw,22px);line-height:1.3;color:var(--oxblood);border-left:3px solid var(--oxblood);padding:5px 0 5px 18px;max-width:60ch}
+  .synth b{font-weight:600}
+
+  .duo{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(28px,4.5vw,64px);align-items:center;flex:1}
+  @media(max-width:880px){.duo{grid-template-columns:1fr}}
+
+  /* ---- P01 expanding labelled circle ---- */
+  .circlebox{display:flex;align-items:center;justify-content:center}
+  .subj-svg{width:100%;max-width:min(42vh,420px);height:auto}
+  .subj-svg circle{fill:none}
+  .subj-svg .rg{stroke:var(--oxblood)}
+  .subj-svg .rg1{fill:var(--oxblood);stroke:none}
+  .subj-svg text{font-family:var(--sans);fill:var(--ink)}
+  .subj-svg .lab{font-size:12.5px;letter-spacing:.01em}
+  .subj-svg .lab-out{font-size:14px;font-weight:600;fill:var(--oxblood)}
+  .subj-svg .sr,.subj-svg .sl{opacity:0}
+  .subj-svg .sr{transform-box:fill-box;transform-origin:center}
+  .slide.active .subj-svg .sr{animation:grow .6s cubic-bezier(.4,0,.2,1) forwards}
+  .slide.active .subj-svg .sl{animation:fade .5s ease forwards}
+  .slide.active .s1{animation-delay:.15s}
+  .slide.active .s2{animation-delay:.5s}
+  .slide.active .s3{animation-delay:.85s}
+  .slide.active .s4{animation-delay:1.2s}
+  @keyframes grow{from{transform:scale(.04);opacity:0}to{transform:scale(1);opacity:1}}
+  @keyframes fade{to{opacity:1}}
+
+  /* ---- P02 axis with gap ---- */
+  .axis{display:grid;grid-template-columns:repeat(4,1fr);margin:6px 0 2px}
+  .node{position:relative;padding-top:28px;padding-right:20px}
+  .node::before{content:"";position:absolute;top:9px;left:0;right:0;height:2px;background:var(--oxblood)}
+  .node.gap::before{background:none;border-top:2px dashed var(--oxblood);opacity:.5}
+  .node::after{content:"";position:absolute;top:4px;left:0;width:11px;height:11px;border-radius:50%;background:var(--oxblood)}
+  .node.gap::after{background:var(--bone);border:2px dashed var(--oxblood);width:12px;height:12px;top:3.5px}
+  .node .yr{font-family:var(--mono);font-weight:700;font-size:clamp(13px,1.35vw,18px);color:var(--oxblood)}
+  .node.gap .yr{font-family:var(--serif);font-weight:400;font-style:italic}
+  .node .lbl{font-size:clamp(11.5px,1.1vw,14px);color:var(--slate);line-height:1.34;margin-top:6px;padding-right:6px}
+  .node .lbl b{color:var(--ink);font-weight:600}
+  .slide.active .node{animation:fadeup .5s ease forwards;opacity:0}
+  .slide.active .node:nth-child(1){animation-delay:.1s}
+  .slide.active .node:nth-child(2){animation-delay:.35s}
+  .slide.active .node:nth-child(3){animation-delay:.6s}
+  .slide.active .node:nth-child(4){animation-delay:.85s}
+  @keyframes fadeup{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* ---- cards ---- */
+  .cards{display:grid;gap:clamp(14px,1.6vw,22px)}
+  .cards.two{grid-template-columns:1fr 1fr}
+  .cards.three{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:880px){.cards.two,.cards.three{grid-template-columns:1fr}}
+  .card{border:1px solid var(--line);background:rgba(255,255,255,.32);border-radius:4px;padding:clamp(16px,1.7vw,24px);display:flex;flex-direction:column;gap:10px;border-top:2.5px solid var(--oxblood)}
+  .card.against{border-top-color:var(--slate)}
+  .card .tag{font-family:var(--mono);font-size:clamp(10px,.9vw,12px);letter-spacing:.03em;color:var(--oxblood);font-weight:500}
+  .card.against .tag{color:var(--slate)}
+  .card h3{font-size:clamp(16px,1.55vw,22px);line-height:1.08}
+  .card p{font-size:clamp(12.5px,1.28vw,15.5px);line-height:1.42;color:#463b34}
+  .card p b{color:var(--oxblood);font-weight:600}
+  .card .foot{margin-top:auto;font-family:var(--mono);font-size:clamp(9.5px,.9vw,11.5px);color:var(--gold);letter-spacing:.02em;padding-top:6px;line-height:1.4}
+
+  .strip{display:flex;gap:16px;align-items:baseline;padding:0 0 16px;border-bottom:1px solid var(--line)}
+  .strip .lead{font-family:var(--serif);font-size:clamp(16px,1.55vw,22px);color:var(--oxblood);white-space:nowrap;font-style:italic}
+  .strip .exp{font-size:clamp(12.5px,1.25vw,16px);line-height:1.42;color:#463b34}
+  .strip .exp b{color:var(--oxblood);font-weight:600}
+
+  .note-line{font-size:clamp(12.5px,1.25vw,16px);color:var(--slate);line-height:1.45;font-style:italic;font-family:var(--serif)}
+  .note-line b{color:var(--oxblood);font-style:normal;font-weight:600}
+
+  /* ================= CONCLUSION ================= */
+  #conclusion{justify-content:center;align-items:center;text-align:center}
+  .c-inner{position:relative;z-index:2;max-width:min(92vw,48ch);margin-inline:auto}
+  #conclusion h2{font-size:clamp(26px,3.4vw,46px);color:var(--bone);line-height:1.1;max-width:20ch;margin-inline:auto}
+  #conclusion h2 .em{color:var(--gold-bright)}
+  #conclusion .cbody{margin-top:clamp(20px,3vh,30px);font-family:var(--serif);font-weight:300;font-size:clamp(16px,1.55vw,22px);line-height:1.55;color:rgba(240,234,222,.92);max-width:46ch;margin-inline:auto}
+  #conclusion .cbody .hl{color:var(--gold-bright);font-style:italic}
+
+  /* ================= CHROME ================= */
+  #progress{position:fixed;left:0;bottom:0;height:3px;background:var(--oxblood);width:0;transition:width .45s ease;z-index:50}
+  body.on-dark #progress{background:var(--gold-bright)}
+  #counter{position:fixed;bottom:clamp(15px,2.8vh,28px);left:var(--pad-x);font-family:var(--mono);font-size:12px;letter-spacing:.09em;color:var(--slate);z-index:45}
+  #counter b{color:var(--oxblood);font-weight:700}
+  #hint{position:fixed;top:clamp(16px,2.8vh,26px);right:var(--pad-x);font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--slate);z-index:45;display:flex;gap:14px;align-items:center}
+  #hint kbd{font-family:var(--mono);background:rgba(33,26,22,.08);border:1px solid var(--line);border-radius:4px;padding:2px 6px;font-size:10.5px;color:var(--ink)}
+  #nav{position:fixed;bottom:clamp(13px,2.8vh,26px);right:var(--pad-x);display:flex;gap:8px;z-index:45}
+  .navbtn{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.45);color:var(--ink);cursor:pointer;display:grid;place-items:center;transition:background .2s,border-color .2s,transform .1s;font-size:15px}
+  .navbtn:hover{background:#fff;border-color:var(--oxblood)}
+  .navbtn:active{transform:scale(.92)}
+  .navbtn:focus-visible{outline:2px solid var(--oxblood);outline-offset:2px}
+  body.on-dark #counter,body.on-dark #hint{color:rgba(240,234,222,.6)}
+  body.on-dark #counter b{color:var(--gold-bright)}
+  body.on-dark #hint kbd{background:rgba(240,234,222,.12);border-color:rgba(240,234,222,.22);color:var(--bone)}
+  body.on-dark .navbtn{background:rgba(240,234,222,.1);border-color:rgba(240,234,222,.26);color:var(--bone)}
+  body.on-dark .navbtn:hover{background:rgba(240,234,222,.2);border-color:var(--gold-bright)}
+
+  #notes{position:fixed;left:0;right:0;bottom:0;z-index:60;background:#1A1310;color:#EAE2D4;border-top:2px solid var(--gold);padding:clamp(16px,2.2vh,24px) var(--pad-x) clamp(20px,2.8vh,28px);transform:translateY(102%);transition:transform .32s cubic-bezier(.5,0,.2,1);max-height:46vh;overflow-y:auto;box-shadow:0 -18px 46px rgba(0,0,0,.35)}
+  #notes.open{transform:none}
+  #notes .nhead{display:flex;align-items:baseline;gap:14px;margin-bottom:12px;font-family:var(--mono);font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-bright)}
+  #notes .nhead .close{margin-left:auto;font-size:11px;color:rgba(234,226,212,.55);cursor:pointer;letter-spacing:.06em}
+  #notesBody{font-size:clamp(13.5px,1.35vw,16.5px);line-height:1.52;max-width:104ch}
+  #notesBody ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+  #notesBody li{padding-left:18px;position:relative;color:#DED4C4}
+  #notesBody li::before{content:"—";position:absolute;left:0;color:var(--gold)}
+  #notesBody li b{color:#fff}
+  #notesBody .say{font-family:var(--serif);font-style:italic;color:#F3ECDE;font-size:1.05em;margin-bottom:12px;line-height:1.42}
+  #notesBody .case{color:var(--gold-bright)}
+
+  @media (max-width:880px){
+    #thesis .split{grid-template-columns:1fr;gap:26px}
+    #cover h1{font-size:clamp(31px,8.6vw,48px)}
+    .content h2{font-size:clamp(23px,6.2vw,34px)}
+    #hint{display:none}
+    .cover-date{margin-left:0;width:100%}
+    .axis{grid-template-columns:1fr;gap:2px}
+    .node{padding-top:0;padding-left:22px;padding-bottom:14px}
+    .node::before{left:0;top:0;bottom:0;right:auto;width:2px;height:auto}
+    .node::after{left:-5px;top:2px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important}
+    .slide{transition:opacity .01s}
+    .strike::after{right:-.04em!important}
+    .subj-svg .sr,.subj-svg .sl{opacity:1!important}
+    .node{opacity:1!important}
+  }
+</style>
+</head>
+<body>
+<main id="deck">
+
+  <!-- 1 · COVER -->
+  <section class="slide dark active" id="cover" data-section="Portada">
+    <div class="cover-course">
+      <span><b>Universidad del Valle</b></span><span>Facultad de Derecho y Ciencias Políticas</span><span>Introducción al Derecho</span>
+    </div>
+    <h1>De <span class="strike">«salvajes»</span> a <span class="live">sujetos colectivos</span></h1>
+    <p class="sub">La consulta previa como demostración de la plenitud del ordenamiento jurídico colombiano</p>
+    <div class="cover-meta">
+      <div class="authors">
+        <span class="author">Juan Sebastián Trujillo <span>2620739</span></span>
+        <span class="author">Juan Manuel Melo <span>2618135</span></span>
+        <span class="author">Johan David Ballesteros <span>2615005</span></span>
+      </div>
+      <span class="cover-date">Prof. Raquel Ceballos Molano · 12 jul 2026</span>
+    </div>
+    <div class="notes" hidden>
+      <p class="say">«Vamos a discutir una idea de teoría del derecho —la plenitud del ordenamiento— con un caso muy concreto: la consulta previa.»</p>
+      <ul>
+        <li>Se suele decir que la consulta previa quedó instaurada con la <span class="case">Ley 21 de 1991</span>. Mostraremos que no fue el tratado por sí solo, sino el ordenamiento integrándose.</li>
+        <li>El título marca el arco: se supera el paradigma del indígena como «salvaje» (por eso la palabra se tacha) hacia el sujeto colectivo de derechos.</li>
+        <li>Reparto sugerido: uno abre (tesis + Pregunta 1), otro toma el vacío y el juez, otro la construcción y el cierre.</li>
+        <li>Pulsa <b>N</b> para ocultar estas notas durante la exposición.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 2 · THESIS -->
+  <section class="slide dark" id="thesis" data-section="Tesis">
+    <div class="eyebrow"><span class="tick"></span> La tesis y sus cuatro preguntas</div>
+    <div class="split">
+      <div>
+        <p class="thesis-lede">La plenitud del ordenamiento no es la <span class="em">ausencia de lagunas</span>, sino la <span class="em">capacidad de integrarlas</span>.</p>
+        <p class="thesis-note">La consulta previa de los grupos étnicos es la mejor demostración reciente de esa capacidad. El Convenio 169 fijó el <b>deber</b> de consulta (arts. 6 y 15), pero no dijo <i>quién</i> consulta, <i>a quién</i>, <i>cómo</i>, con qué <i>efectos</i> ni con qué <i>consecuencia</i> por su omisión.</p>
+      </div>
+      <div class="qlist">
+        <div class="qrow"><span class="qnum">01</span><span class="qtxt">¿Quién es el <b>sujeto</b>?</span></div>
+        <div class="qrow"><span class="qnum">02</span><span class="qtxt">¿Cuál fue el <b>vacío</b>?</span></div>
+        <div class="qrow"><span class="qnum">03</span><span class="qtxt">¿Con qué <b>autoridad</b> podía el juez colmarlo?</span></div>
+        <div class="qrow"><span class="qnum">04</span><span class="qtxt">¿<b>Cómo</b> lo hizo?</span></div>
+      </div>
+    </div>
+    <div class="notes" hidden>
+      <p class="say">«El corazón del trabajo es esta frase: un sistema es pleno no porque lo prevea todo, sino porque sabe integrar lo que no previó.»</p>
+      <ul>
+        <li>Insiste en la jerarquía: la <b>plenitud</b> es el tema; la <b>consulta previa</b> es el ejemplo que la prueba.</li>
+        <li>El Convenio dejó cinco preguntas abiertas (quién, a quién, cómo, efectos, consecuencia por omisión).</li>
+        <li>Enuncia las cuatro preguntas: son el índice de la exposición, una por lámina.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 3 · P01 EL SUJETO -->
+  <section class="slide content" id="p1" data-section="01 · El sujeto">
+    <span class="ghost">01</span>
+    <div class="qhead"><span class="pill">Pregunta 01</span></div>
+    <h2>¿Quién puede ser <span class="em">titular</span> del derecho?</h2>
+    <div class="duo">
+      <div class="circlebox">
+        <svg class="subj-svg" viewBox="0 0 340 300" aria-hidden="true">
+          <circle class="rg sr s4" cx="170" cy="176" r="118" stroke-width="1"/>
+          <circle class="rg sr s3" cx="170" cy="176" r="86" stroke-width="1.2"/>
+          <circle class="rg sr s2" cx="170" cy="176" r="54" stroke-width="1.4"/>
+          <circle class="rg1 sr s1" cx="170" cy="176" r="23"/>
+          <text class="lab-out sl s4" x="170" y="46" text-anchor="middle">grupo étnico</text>
+          <text class="lab sl s3" x="170" y="80" text-anchor="middle">persona jurídica</text>
+          <text class="lab sl s2" x="170" y="112" text-anchor="middle">manumitidos y peregrinos</text>
+          <text class="lab sl s1" x="170" y="150" text-anchor="middle">esclavo</text>
+        </svg>
+      </div>
+      <div class="points">
+        <div class="point"><span class="mk fill"></span><p>La frontera del sujeto nunca fue fija: del esclavo (patrimonio ajeno) se amplió hasta los entes sin cuerpo —corporaciones, municipios— vía <b>persona jurídica</b>. <span class="ref">(Casadiego, 2003)</span></p></div>
+        <div class="point"><span class="mk"></span><p>Si un municipio es sujeto, la pregunta ante un pueblo étnico no es <i>si</i> un ente colectivo puede serlo, sino <b>en qué condiciones</b>: la comunidad indígena es sujeto colectivo, no suma de individuos. <span class="case">T-380/1993</span></p></div>
+        <div class="point"><span class="mk"></span><p>El criterio decisivo es la <b>autoidentificación</b> (art. 1.2): por ahí entran las comunidades negras, afro, raizales, palenqueras y el pueblo Rrom. <span class="case">SU-123/2018</span></p></div>
+        <div class="point"><span class="mk"></span><p>Misma senda en lo internacional: del Convenio 107 (asimilación) al 169 (identidad); Corte IDH en <span class="case">Saramaka</span> y <span class="case">Sarayaku</span>.</p></div>
+      </div>
+    </div>
+    <div class="notes" hidden>
+      <p class="say">«El círculo de sujetos que crece en pantalla empezó estrecho en Roma y no ha dejado de ensancharse.»</p>
+      <ul>
+        <li>Los anillos crecen del centro hacia afuera: esclavo excluido → libertos → persona jurídica → grupo étnico. Esa es la idea entera.</li>
+        <li>Argumento fuerte: si la persona jurídica —un ente sin cuerpo— es sujeto hace siglos, negarlo a un pueblo étnico no es un límite técnico. <span class="case">(Casadiego, 2003)</span></li>
+        <li><span class="case">T-380/1993</span> da el paso: sujeto colectivo, no suma de individuos.</li>
+        <li>La autoidentificación (art. 1.2) es la llave por la que entran los demás grupos. Cierra: el ordenamiento traza estos contornos… y por eso puede volver a trazarlos.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 4 · P02 EL VACÍO -->
+  <section class="slide content" id="p2" data-section="02 · El vacío">
+    <span class="ghost">02</span>
+    <div class="qhead"><span class="pill">Pregunta 02</span></div>
+    <h2>Del indígena incapaz a un derecho <span class="em">sin procedimiento</span></h2>
+    <div class="content-body">
+      <div class="axis">
+        <div class="node"><div class="yr">1890</div><div class="lbl"><b>Ley 89:</b> gobierno de «salvajes»; el indígena, menor de edad bajo tutela (art. 40)</div></div>
+        <div class="node"><div class="yr">1991</div><div class="lbl"><b>C.P. + Convenio 169:</b> sujeto que participa (art. 330)… pero sin decir cómo, ante quién ni con qué consecuencias</div></div>
+        <div class="node gap"><div class="yr">laguna</div><div class="lbl">técnica: falta la norma que hace <i>eficaz</i> el derecho ya enunciado</div></div>
+        <div class="node"><div class="yr">1997</div><div class="lbl">la jurisprudencia la colma por integración</div></div>
+      </div>
+      <div class="points">
+        <div class="point"><span class="mk fill"></span><p>Bajo el asimilacionismo <b>no había laguna</b>: un sistema que concibe al indígena como incapaz es coherente al no consultarlo. La laguna nace en 1991, cuando cambia la base axiológica sin proveer el procedimiento. <span class="ref">(Bobbio, 1994)</span></p></div>
+        <div class="point"><span class="mk"></span><p>Dos agravantes: la <b>ley estatutaria</b> (art. 152) lleva más de tres décadas en mora, y el <span class="case">Decreto 1320/1998</span> fue inaplicado por inconstitucional y objetado por la propia OIT.</p></div>
+      </div>
+      <p class="note-line">La vieja arquitectura de la incapacidad solo cayó con la <span class="case">C-139/1996</span>, que declaró inexequibles los arts. 1, 5 y 40 de la Ley 89.</p>
+    </div>
+    <div class="notes" hidden>
+      <p class="say">«El punto técnico más fino del trabajo está en el rombo punteado: ahí, y solo ahí, aparece la laguna.»</p>
+      <ul>
+        <li>Antes de 1991 no faltaban normas —sobraban, todas desde la incapacidad (<span class="case">Ley 89 de 1890</span>, el indígena como menor de edad).</li>
+        <li>El sistema viejo era coherente: si es incapaz, no consultarlo tiene lógica. La laguna nace cuando cambia el <b>valor</b> (sujeto que participa) y no llega el <b>procedimiento</b>. Es una laguna <i>técnica</i> <span class="case">(Bobbio, 1994)</span>.</li>
+        <li>Se agrava: 30+ años sin ley estatutaria y el único decreto reglamentario, tumbado y criticado por la OIT.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 5 · P03 EL JUEZ -->
+  <section class="slide content" id="p3" data-section="03 · El juez">
+    <span class="ghost">03</span>
+    <div class="qhead"><span class="pill">Pregunta 03</span></div>
+    <h2>El juez debía fallar <span class="em">—y podía—</span></h2>
+    <div class="content-body">
+      <div class="strip">
+        <span class="lead"><i>Non liquet</i> prohibido</span>
+        <span class="exp">La <b>Ley 153 de 1887</b> hace responsable por denegación de justicia al juez que no falle (art. 48) y le da el método: analogía, doctrina constitucional y reglas generales (art. 8). Hoy, <b>CGP arts. 7 y 12</b>. Integrar es un <b>deber</b>, no una facultad.</span>
+      </div>
+      <div class="cards three">
+        <div class="card">
+          <span class="tag">VALIDEZ · ¿PODÍA?</span>
+          <h3>Kelsen</h3>
+          <p>La persona es un <b>centro de imputación</b>, no un dato natural: puede ser colectiva. El juez actúa por los arts. 86, 241 y 93 —no usurpa al legislador.</p>
+          <span class="foot">Kelsen, 1995</span>
+        </div>
+        <div class="card">
+          <span class="tag">MOTIVO · ¿POR QUÉ?</span>
+          <h3>Ihering · Bobbio</h3>
+          <p>El derecho es la <b>lucha</b> por incorporar intereses nuevos; cuando la ley se aleja de la realidad, son los jueces quienes cierran la brecha.</p>
+          <span class="foot">Ihering, 2007 · Bobbio, 1994</span>
+        </div>
+        <div class="card">
+          <span class="tag">CORRECCIÓN · ¿ERA JUSTO?</span>
+          <h3>Hart</h3>
+          <p><b>Contenido mínimo</b> del derecho natural: si decidir sobre sus territorios sin ellos los destruye, consultarlos no es un ideal contingente.</p>
+          <span class="foot">Hart, 1963 · Auto 004/2009: 34 pueblos en riesgo</span>
+        </div>
+      </div>
+      <span class="synth">Jerárquicamente <b>posible</b>, socialmente <b>exigido</b>, filosóficamente <b>necesario</b>.</span>
+    </div>
+    <div class="notes" hidden>
+      <p class="say">«Primero el deber, luego la legitimidad. Tres escuelas que en abstracto rivalizan aquí dicen lo mismo.»</p>
+      <ul>
+        <li><i>Non liquet</i>: al juez le está prohibido lavarse las manos por vacío legal (art. 48), y la misma ley de 1887 le da las herramientas (art. 8). Integrar es obligación.</li>
+        <li><b>Kelsen</b> — validez: la persona es punto de imputación, puede ser colectiva; negarlo es ideología disfrazada de imposibilidad técnica.</li>
+        <li><b>Ihering/Bobbio</b> — motivo: el derecho avanza por la lucha por intereses nuevos; el juez cierra la brecha.</li>
+        <li><b>Hart</b> — corrección: consultarlos es «contenido mínimo». Lo confirma el <span class="case">Auto 004/2009</span>: 34 pueblos en riesgo de exterminio. Remata: posible + exigido + necesario.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 6 · P04a LOS CASOS + EL CHOQUE -->
+  <section class="slide content" id="p4a" data-section="04 · La construcción">
+    <span class="ghost">04</span>
+    <div class="qhead"><span class="pill">Pregunta 04</span><span class="qsub">Las sentencias fundadoras</span></div>
+    <h2>El vacío se vuelve concreto <span class="em">—y disputado—</span></h2>
+    <div class="content-body">
+      <div class="cards three">
+        <div class="card against">
+          <span class="tag">EN CONTRA · CONTENCIOSO-ADMIN.</span>
+          <h3>Consejo de Estado</h3>
+          <p>Leyendo los mismos hechos, negó suspender la licencia (1995) y en Sala Plena (4 mar 1997) la declaró legal: la reunión de enero de 1995 fue «razonablemente adecuada». Por <b>14 votos contra 7</b> dejó sin efectos la tutela.</p>
+          <span class="foot">La consulta como derecho no era evidente: fue construida</span>
+        </div>
+        <div class="card">
+          <span class="tag">A FAVOR · SU-039/1997 · U'WA</span>
+          <h3>Bloque Samoré</h3>
+          <p>Frente a una sola reunión informativa como «consulta», la Corte declara la consulta previa <b>derecho fundamental</b> del pueblo como sujeto colectivo y ordena rehacerla.</p>
+          <span class="foot">Corte Constitucional, 1997 · vs. Occidental de Colombia</span>
+        </div>
+        <div class="card">
+          <span class="tag">DAÑO CONSUMADO · T-652/1998</span>
+          <h3>Embera-Katío · Urrá I</h3>
+          <p>Represa sin consulta sobre el Alto Sinú. <b>Inaplica</b> el Decreto 1320/1998, ordena la consulta del llenado del embalse e <b>indemniza</b> al pueblo como sujeto colectivo del daño.</p>
+          <span class="foot">Corte Constitucional, 1998</span>
+        </div>
+      </div>
+      <p class="note-line"><b>Lo decisivo:</b> ninguna aplicó una ley estatutaria de consulta —no existía ni existe. Dos jurisdicciones leyeron los mismos hechos y fallaron distinto: reconocer el derecho fue una construcción, no un dato.</p>
+    </div>
+    <div class="notes" hidden>
+      <p class="say">«Aquí el vacío deja de ser teoría, y además dos altas cortes chocan: el 'choque de trenes'.»</p>
+      <ul>
+        <li><b>En contra —</b> el <span class="case">Consejo de Estado</span>, leyendo los mismos hechos, sostuvo que la reunión de enero de 1995 bastaba y declaró legal la licencia (Sala Plena, 4 mar 1997), 14 a 7, dejando sin efectos la tutela. Ya antes había negado la suspensión provisional. Prueba de que el derecho no era obvio: un juez falló que no había que consultar.</li>
+        <li><b>A favor —</b> <span class="case">SU-039/1997</span> (U'wa): una reunión informativa no es consulta; la consulta es derecho fundamental del pueblo. Rehacerla.</li>
+        <li><b>Reparación —</b> <span class="case">T-652/1998</span> (Embera-Katío, Urrá): daño ya hecho; inaplica el Decreto 1320 e indemniza.</li>
+        <li>Moraleja: como las escuelas rivalizaban y las cortes chocaban, que hoy sea derecho fundamental confirma que se <b>construyó</b> por integración —no estaba dado.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 7 · P04b MÉTODO Y CONVENIO -->
+  <section class="slide content" id="p4b" data-section="04 · La construcción">
+    <span class="ghost">04</span>
+    <div class="qhead"><span class="pill">Pregunta 04</span><span class="qsub">El método y el papel del Convenio</span></div>
+    <h2>Herramientas de <span class="em">integración</span>, no una norma que baste</h2>
+    <div class="content-body">
+      <div class="points">
+        <div class="point"><span class="mk fill"></span><p>El método fue <b>analogía</b> (<i>legis</i> e <i>iuris</i>), <b>aplicación directa</b> del Convenio por el bloque de constitucionalidad y <b>equidad</b> (art. 230) para adaptar categorías individuales a un titular colectivo. No hubo costumbre <i>praeter legem</i>. <span class="ref">(De Ángel Yágüez, 1993; Latorre, 1999)</span></p></div>
+        <div class="point"><span class="mk"></span><p>Ese método ya estaba avalado: la <span class="case">C-083/1995</span> erigió la doctrina constitucional en fuente integradora. <b>El instrumental de 1887, revalidado en 1995, operó en 1997.</b></p></div>
+        <div class="point"><span class="mk"></span><p>El Convenio 169 no es norma autosuficiente sino <b>estándar sustantivo</b>: fijó el principio (consulta de buena fe, instituciones representativas, afectación directa) y abrió la puerta con la autoidentificación.</p></div>
+        <div class="point"><span class="mk"></span><p>Su fuerza viene del <b><i>pacta sunt servanda</i></b> (Viena, 1969, art. 26); el art. 27 impide invocar el derecho interno —o su ausencia— para incumplir: <b>la mora del legislador no excusa la falta de consulta.</b></p></div>
+      </div>
+      <span class="synth">El Convenio aportó la <b>materia prima</b>; la jurisprudencia, por integración, la volvió <b>derecho operativo</b>.</span>
+    </div>
+    <div class="notes" hidden>
+      <p class="say">«Lo decisivo no es qué decidieron, sino cómo: sin ley estatutaria, con las herramientas de integración del propio sistema.»</p>
+      <ul>
+        <li>Analogía <i>legis</i> (de otra norma parecida) y <i>iuris</i> (de los principios), aplicación directa por el bloque, y equidad para colectivizar lo individual. <b>No</b> fue costumbre —no la había.</li>
+        <li>El método no se improvisó: la <span class="case">C-083/1995</span> ya lo validó leyendo la ley de 1887. Herramientas viejas para un problema nuevo.</li>
+        <li>El Convenio da lo sustantivo, no el procedimiento. <i>Pacta sunt servanda</i> + art. 27 de Viena: el Estado no puede escudarse en que le falta ley interna.</li>
+        <li>Frase de cierre: materia prima (Convenio) → derecho operativo (jurisprudencia).</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 8 · CONCLUSIÓN -->
+  <section class="slide dark" id="conclusion" data-section="Conclusión">
+    <div class="c-inner">
+      <div class="eyebrow" style="justify-content:center;margin-bottom:20px"><span class="tick"></span> Conclusión <span class="tick"></span></div>
+      <h2>La plenitud es <span class="em">capacidad de integración</span></h2>
+      <p class="cbody">Un sistema es pleno no porque prevea cada conflicto, sino porque puede resolver <span class="hl">lo que su creador no imaginó o se negó a regular</span>. El círculo romano no se detuvo: alcanzó a los grupos étnicos como sujetos colectivos. El Convenio 169 enunció el deber; el ordenamiento, <span class="hl">integrándose a sí mismo</span>, lo convirtió en derecho.</p>
+    </div>
+    <div class="notes" hidden>
+      <p class="say">«Cerramos volviendo a la tesis del inicio, ahora demostrada.»</p>
+      <ul>
+        <li>El fracaso institucional en fila: el legislador de 1890 vio un incapaz; el constituyente del 91 proclamó sin procedimentar; el legislador estatutario sigue en mora.</li>
+        <li>Y aun así, cuando la pregunta llegó a los tribunales —y pese al choque entre cortes— el sistema respondió con lo que ya tenía, hasta definir quién pertenece al círculo.</li>
+        <li>Idea final: el círculo abierto en Roma llega, por vía jurisprudencial, hasta los grupos étnicos. Un ordenamiento pleno es el que sabe integrarse a sí mismo.</li>
+        <li>Gracias / abrimos preguntas.</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<div id="notes" aria-live="polite">
+  <div class="nhead"><span>Notas del expositor</span><span id="notesSection"></span><span class="close" id="notesClose">ocultar · N</span></div>
+  <div id="notesBody"></div>
+</div>
+
+<div id="hint"><span><kbd>←</kbd> <kbd>→</kbd> navegar</span><span><kbd>N</kbd> notas</span><span><kbd>F</kbd> pantalla</span></div>
+<div id="progress"></div>
+<div id="counter"><b id="cur">01</b> / <span id="total">08</span> · <span id="secLabel">Portada</span></div>
+<div id="nav">
+  <button class="navbtn" id="prev" aria-label="Anterior">‹</button>
+  <button class="navbtn" id="next" aria-label="Siguiente">›</button>
+</div>
+
+<script>
+(function(){
+  const slides=[...document.querySelectorAll('.slide')];
+  const total=slides.length;
+  let i=0;
+  const cur=document.getElementById('cur');
+  const secLabel=document.getElementById('secLabel');
+  const progress=document.getElementById('progress');
+  const notesPanel=document.getElementById('notes');
+  const notesBody=document.getElementById('notesBody');
+  const notesSection=document.getElementById('notesSection');
+  let notesOpen=false;
+  document.getElementById('total').textContent=String(total).padStart(2,'0');
+  const pad=n=>String(n+1).padStart(2,'0');
+
+  function syncNotes(){
+    const n=slides[i].querySelector('.notes');
+    notesBody.innerHTML=n?n.innerHTML:'<p class="say">—</p>';
+    notesSection.textContent=slides[i].dataset.section||'';
+  }
+  function show(n){
+    n=Math.max(0,Math.min(total-1,n));
+    slides.forEach((s,idx)=>s.classList.toggle('active',idx===n));
+    i=n;
+    cur.textContent=pad(i);
+    secLabel.textContent=slides[i].dataset.section||'';
+    progress.style.width=(i/(total-1)*100)+'%';
+    document.body.classList.toggle('on-dark',slides[i].classList.contains('dark'));
+    syncNotes();
+  }
+  const next=()=>show(i+1), prev=()=>show(i-1);
+  function toggleNotes(f){notesOpen=(typeof f==='boolean')?f:!notesOpen;notesPanel.classList.toggle('open',notesOpen);}
+
+  document.getElementById('next').addEventListener('click',next);
+  document.getElementById('prev').addEventListener('click',prev);
+  document.getElementById('notesClose').addEventListener('click',()=>toggleNotes(false));
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();next();}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prev();}
+    else if(e.key==='Home'){show(0);}
+    else if(e.key==='End'){show(total-1);}
+    else if(e.key.toLowerCase()==='n'){toggleNotes();}
+    else if(e.key.toLowerCase()==='f'){document.fullscreenElement?document.exitFullscreen?.():document.documentElement.requestFullscreen?.();}
+  });
+  let tx=0,ty=0;
+  document.addEventListener('touchstart',e=>{tx=e.changedTouches[0].clientX;ty=e.changedTouches[0].clientY;},{passive:true});
+  document.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;
+    if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)){dx<0?next():prev();}
+  },{passive:true});
+  const h=parseInt(location.hash.replace('#',''),10);
+  show(!isNaN(h)?h-1:0);
+})();
+</script>
+</body>
+</html>
