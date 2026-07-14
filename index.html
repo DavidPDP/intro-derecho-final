@@ -141,6 +141,29 @@
   @keyframes fadeup{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
   @media(max-width:880px){.tlv{grid-template-columns:1fr;gap:0}}
 
+  /* ---- P04b cuadro (integration table) ---- */
+  #p4b .content-body{justify-content:safe center;overflow-y:auto;min-height:0;gap:clamp(10px,1.8vh,18px)}
+  .cuadro-wrap{width:100%;overflow-x:auto}
+  .cuadro{width:100%;border-collapse:collapse}
+  .cuadro th,.cuadro td{text-align:left;vertical-align:top}
+  .cuadro thead th{font-family:var(--mono);font-size:clamp(9px,.8vw,11px);letter-spacing:.05em;text-transform:uppercase;color:var(--oxblood);font-weight:500;padding:0 9px 8px;border-bottom:2px solid var(--oxblood);white-space:nowrap}
+  .cuadro tbody td{font-size:clamp(11px,1.02vw,13.5px);padding:8px 9px;border-bottom:1px solid var(--line);line-height:1.34;color:#43382f}
+  .cuadro tbody tr:nth-child(even){background:rgba(255,255,255,.26)}
+  .cuadro tbody tr.real{background:rgba(106,20,32,.07)}
+  .cuadro .num{font-family:var(--mono);color:var(--slate);font-weight:600;width:26px;text-align:center}
+  .cuadro .comp{color:var(--ink);font-weight:500;width:25%}
+  .cuadro .comp small{display:block;color:var(--slate);font-weight:400;font-size:.86em;margin-top:1px}
+  .cuadro .oper{width:24%}
+  .cuadro .fund{width:23%;color:var(--slate)}
+  .cuadro .fund .case{white-space:normal}
+  .cuadro .tipo{font-family:var(--mono);font-size:.86em;color:var(--gold);white-space:nowrap}
+  .cuadro .tipo.dash{color:rgba(33,26,22,.3)}
+  .lag{display:inline-block;font-family:var(--mono);font-size:clamp(9.5px,.85vw,11.5px);font-weight:600;padding:2px 9px;border-radius:999px;letter-spacing:.04em}
+  .lag.si{background:var(--oxblood);color:#fff}
+  .lag.no{background:none;border:1px solid var(--line);color:var(--slate)}
+  .cuadro-foot{font-size:clamp(10.5px,1vw,12.5px);color:var(--slate);font-style:italic;font-family:var(--serif);line-height:1.4}
+  @media(max-width:880px){.cuadro{font-size:11px}.cuadro .comp small{display:none}}
+
   /* ---- cards ---- */
   .cards{display:grid;gap:clamp(14px,1.6vw,22px)}
   .cards.two{grid-template-columns:1fr 1fr}
@@ -431,24 +454,99 @@
   <!-- 7 · P04b MÉTODO Y CONVENIO -->
   <section class="slide content" id="p4b" data-section="04 · La construcción">
     <span class="ghost">04</span>
-    <div class="qhead"><span class="pill">Pregunta 04</span><span class="qsub">El método y el papel del Convenio</span></div>
-    <h2>Herramientas de <span class="em">integración</span>, no una norma que baste</h2>
+    <div class="qhead"><span class="pill">Pregunta 04</span><span class="qsub">Cuadro · integración del derecho a la consulta previa</span></div>
+    <h2>No todo fue «laguna»: <span class="em">cada pieza, una operación</span></h2>
     <div class="content-body">
-      <div class="points">
-        <div class="point"><span class="mk fill"></span><p>El método fue <b>analogía</b> (<i>legis</i> e <i>iuris</i>), <b>aplicación directa</b> del Convenio por el bloque de constitucionalidad y <b>equidad</b> (art. 230) para adaptar categorías individuales a un titular colectivo. No hubo costumbre <i>praeter legem</i>. <span class="ref">(De Ángel Yágüez, 1993; Latorre, 1999)</span></p></div>
-        <div class="point"><span class="mk"></span><p>Ese método ya estaba avalado: la <span class="case">C-083/1995</span> erigió la doctrina constitucional en fuente integradora. <b>El instrumental de 1887, revalidado en 1995, operó en 1997.</b></p></div>
-        <div class="point"><span class="mk"></span><p>El Convenio 169 no es norma autosuficiente sino <b>estándar sustantivo</b>: fijó el principio (consulta de buena fe, instituciones representativas, afectación directa) y abrió la puerta con la autoidentificación.</p></div>
-        <div class="point"><span class="mk"></span><p>Su fuerza viene del <b><i>pacta sunt servanda</i></b> (Viena, 1969, art. 26); el art. 27 impide invocar el derecho interno —o su ausencia— para incumplir: <b>la mora del legislador no excusa la falta de consulta.</b></p></div>
+      <div class="cuadro-wrap">
+        <table class="cuadro">
+          <thead>
+            <tr>
+              <th class="num">#</th>
+              <th>Componente</th>
+              <th>¿Laguna?</th>
+              <th>Tipo</th>
+              <th>Operación jurídica</th>
+              <th>Fundamento / sentencia</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="num">1</td>
+              <td class="comp">Deber de consultar ante afectación directa <small>núcleo del derecho</small></td>
+              <td><span class="lag no">No</span></td>
+              <td class="tipo dash">—</td>
+              <td class="oper">Subsunción directa (norma ya vigente en el bloque)</td>
+              <td class="fund">Convenio 169 art. 6 (arts. 93-94 C.P.) · <span class="case">SU-039/97</span></td>
+            </tr>
+            <tr>
+              <td class="num">2</td>
+              <td class="comp">Alcance más allá del art. 330 <small>cualquier medida, no solo recursos en territorio</small></td>
+              <td><span class="lag no">No*</span></td>
+              <td class="tipo dash">—</td>
+              <td class="oper">Subsunción, no analogía</td>
+              <td class="fund">Convenio 169 art. 6 «medidas legislativas o administrativas» · <span class="case">SU-039/97</span></td>
+            </tr>
+            <tr>
+              <td class="num">3</td>
+              <td class="comp">Titulares: indígenas + tribales / negras / raizales</td>
+              <td><span class="lag no">No</span></td>
+              <td class="tipo dash">—</td>
+              <td class="oper">Subsunción directa</td>
+              <td class="fund">Convenio 169 art. 1.1 + Ley 70/93 arts. 2-5 · <span class="case">C-169/01</span></td>
+            </tr>
+            <tr>
+              <td class="num">4</td>
+              <td class="comp">Autoidentificación como criterio del pueblo</td>
+              <td><span class="lag no">No</span></td>
+              <td class="tipo dash">—</td>
+              <td class="oper">Subsunción directa</td>
+              <td class="fund">Convenio 169 art. 1.2</td>
+            </tr>
+            <tr class="real">
+              <td class="num">5</td>
+              <td class="comp">Procedimiento y objetivos <small>buena fe, etapas, información plena</small></td>
+              <td><span class="lag si">Sí</span></td>
+              <td class="tipo">Técnica</td>
+              <td class="oper">Concreción de estándar indeterminado (limítrofe con analogía <i>iuris</i>)</td>
+              <td class="fund">Deber ya existía (art. 6); concretado desde arts. 83, 29, 40-2 C.P. · <span class="case">SU-039/97</span></td>
+            </tr>
+            <tr>
+              <td class="num">6</td>
+              <td class="comp">Definir caso a caso la «afectación directa»</td>
+              <td><span class="lag no">No</span></td>
+              <td class="tipo dash">—</td>
+              <td class="oper">Interpretación (concepto jurídico indeterminado)</td>
+              <td class="fund">Línea posterior · <span class="case">T-129/11</span></td>
+            </tr>
+            <tr class="real">
+              <td class="num">7</td>
+              <td class="comp">Consecuencia de omitir la consulta <small>inexequibilidad de la ley</small></td>
+              <td><span class="lag si">Sí</span></td>
+              <td class="tipo">Normativa / técnica</td>
+              <td class="oper">Analogía <i>iuris</i>: categoría nueva (vicio material); descarta la vía <i>legis</i></td>
+              <td class="fund"><span class="case">C-030/08</span></td>
+            </tr>
+            <tr class="real">
+              <td class="num">8</td>
+              <td class="comp">Consentimiento reforzado en proyectos de gran escala</td>
+              <td><span class="lag si">Sí</span></td>
+              <td class="tipo">Técnica</td>
+              <td class="oper">Construcción jurisprudencial (<i>iuris</i>, vía Corte IDH)</td>
+              <td class="fund">Saramaka 2007 · adoptado en CO</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <span class="synth">El Convenio aportó la <b>materia prima</b>; la jurisprudencia, por integración, la volvió <b>derecho operativo</b>.</span>
+      <p class="cuadro-foot">* Suele citarse como analogía, pero es subsunción: el art. 6 ya cubre las medidas legislativas y administrativas.</p>
+      <span class="synth">De ocho componentes, solo <b>tres</b> fueron lagunas reales que exigieron integración (analogía <i>iuris</i> o construcción); el resto salió por <b>subsunción directa</b> del Convenio en el bloque.</span>
     </div>
     <div class="notes" hidden>
-      <p class="say">«Lo decisivo no es qué decidieron, sino cómo: sin ley estatutaria, con las herramientas de integración del propio sistema.»</p>
+      <p class="say">«Este cuadro afina lo que dijimos del vacío: no todo fue laguna. Léelo por la columna “¿Laguna?”.»</p>
       <ul>
-        <li>Analogía <i>legis</i> (de otra norma parecida) y <i>iuris</i> (de los principios), aplicación directa por el bloque, y equidad para colectivizar lo individual. <b>No</b> fue costumbre —no la había.</li>
-        <li>El método no se improvisó: la <span class="case">C-083/1995</span> ya lo validó leyendo la ley de 1887. Herramientas viejas para un problema nuevo.</li>
-        <li>El Convenio da lo sustantivo, no el procedimiento. <i>Pacta sunt servanda</i> + art. 27 de Viena: el Estado no puede escudarse en que le falta ley interna.</li>
-        <li>Frase de cierre: materia prima (Convenio) → derecho operativo (jurisprudencia).</li>
+        <li>Cinco de ocho componentes salieron por <b>subsunción directa</b>: el Convenio, ya en el bloque (arts. 93-94), cubría el deber, el alcance, los titulares y la autoidentificación. Ahí no hubo integración, hubo aplicación.</li>
+        <li>Las <b>lagunas reales</b> son solo tres (filas resaltadas): el procedimiento (fila 5), la consecuencia de omitir —inexequibilidad, por analogía <i>iuris</i>, no <i>legis</i>— (fila 7, <span class="case">C-030/08</span>) y el consentimiento reforzado (fila 8, vía <span class="case">Saramaka</span>).</li>
+        <li>Ese es el matiz fuerte: el «vacío» era más estrecho de lo que suele decirse; la creación jurisprudencial fue quirúrgica, no total.</li>
+        <li>Puedes añadir de viva voz: la exigibilidad se apoya en el <i>pacta sunt servanda</i> (Viena, arts. 26-27) —el Estado no puede invocar la falta de ley interna para incumplir.</li>
       </ul>
     </div>
   </section>
