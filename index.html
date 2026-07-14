@@ -123,23 +123,23 @@
   @keyframes grow{from{transform:scale(.04);opacity:0}to{transform:scale(1);opacity:1}}
   @keyframes fade{to{opacity:1}}
 
-  /* ---- P02 axis with gap ---- */
-  .axis{display:grid;grid-template-columns:repeat(4,1fr);margin:6px 0 2px}
-  .node{position:relative;padding-top:28px;padding-right:20px}
-  .node::before{content:"";position:absolute;top:9px;left:0;right:0;height:2px;background:var(--oxblood)}
-  .node.gap::before{background:none;border-top:2px dashed var(--oxblood);opacity:.5}
-  .node::after{content:"";position:absolute;top:4px;left:0;width:11px;height:11px;border-radius:50%;background:var(--oxblood)}
-  .node.gap::after{background:var(--bone);border:2px dashed var(--oxblood);width:12px;height:12px;top:3.5px}
-  .node .yr{font-family:var(--mono);font-weight:700;font-size:clamp(13px,1.35vw,18px);color:var(--oxblood)}
-  .node.gap .yr{font-family:var(--serif);font-weight:400;font-style:italic}
-  .node .lbl{font-size:clamp(11.5px,1.1vw,14px);color:var(--slate);line-height:1.34;margin-top:6px;padding-right:6px}
-  .node .lbl b{color:var(--ink);font-weight:600}
-  .slide.active .node{animation:fadeup .5s ease forwards;opacity:0}
-  .slide.active .node:nth-child(1){animation-delay:.1s}
-  .slide.active .node:nth-child(2){animation-delay:.35s}
-  .slide.active .node:nth-child(3){animation-delay:.6s}
-  .slide.active .node:nth-child(4){animation-delay:.85s}
+  /* ---- P02 vertical timeline (two columns) ---- */
+  #p2 .content-body{justify-content:safe center;overflow-y:auto;min-height:0}
+  .tlv{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,3.4vw,54px);align-content:start;padding-top:2px}
+  .tlcol{position:relative;padding-left:24px;border-left:2px solid var(--line)}
+  .tlv .item{position:relative;padding-bottom:clamp(11px,1.7vh,18px)}
+  .tlv .item:last-child{padding-bottom:0}
+  .tlv .item::before{content:"";position:absolute;left:-30px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--oxblood);box-shadow:0 0 0 3px var(--bone)}
+  .tlv .item.gap::before{background:var(--bone);border:1.6px dashed var(--oxblood);width:11px;height:11px;left:-30.5px}
+  .tlv .yr{font-family:var(--mono);font-weight:700;font-size:clamp(12.5px,1.2vw,16px);color:var(--oxblood);letter-spacing:.02em}
+  .tlv .item.gap .yr{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--gold);text-transform:lowercase}
+  .tlv .desc{font-size:clamp(11.5px,1.08vw,14px);line-height:1.36;color:var(--slate);margin-top:3px}
+  .tlv .desc b{color:var(--ink);font-weight:600}
+  .tlv .desc .case{font-size:.94em}
+  .slide.active .tlcol{animation:fadeup .5s ease forwards;opacity:0}
+  .slide.active .tlcol:nth-child(2){animation-delay:.18s}
   @keyframes fadeup{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @media(max-width:880px){.tlv{grid-template-columns:1fr;gap:0}}
 
   /* ---- cards ---- */
   .cards{display:grid;gap:clamp(14px,1.6vw,22px)}
@@ -315,26 +315,33 @@
   <section class="slide content" id="p2" data-section="02 · El vacío">
     <span class="ghost">02</span>
     <div class="qhead"><span class="pill">Pregunta 02</span></div>
-    <h2>Del indígena incapaz a un derecho <span class="em">sin procedimiento</span></h2>
+    <h2>Una laguna que se <span class="em">colma</span>… pero no se <span class="em">cierra</span></h2>
     <div class="content-body">
-      <div class="axis">
-        <div class="node"><div class="yr">1890</div><div class="lbl"><b>Ley 89:</b> gobierno de «salvajes»; el indígena, menor de edad bajo tutela (art. 40)</div></div>
-        <div class="node"><div class="yr">1991</div><div class="lbl"><b>C.P. + Convenio 169:</b> sujeto que participa (art. 330)… pero sin decir cómo, ante quién ni con qué consecuencias</div></div>
-        <div class="node gap"><div class="yr">laguna</div><div class="lbl">técnica: falta la norma que hace <i>eficaz</i> el derecho ya enunciado</div></div>
-        <div class="node"><div class="yr">1997</div><div class="lbl">la jurisprudencia la colma por integración</div></div>
+      <div class="tlv">
+        <div class="tlcol">
+          <div class="item"><div class="yr">1890</div><div class="desc"><b>Ley 89:</b> gobierno de «salvajes»; el indígena, menor de edad bajo tutela (art. 40).</div></div>
+          <div class="item"><div class="yr">1991</div><div class="desc"><b>C.P. + Convenio 169:</b> sujeto que participa (art. 330)… pero sin decir cómo, ante quién ni con qué consecuencias.</div></div>
+          <div class="item gap"><div class="yr">laguna</div><div class="desc">técnica: falta la norma que hace <i>eficaz</i> el derecho ya enunciado. <span class="ref">(Bobbio, 1994)</span></div></div>
+          <div class="item"><div class="yr">1993</div><div class="desc"><span class="case">T-380:</span> la Corte crea la categoría «sujeto colectivo de derechos» —primer paso, pero con efectos solo <i>inter partes</i> (no vincula a otros jueces).</div></div>
+          <div class="item"><div class="yr">1997</div><div class="desc"><span class="case">SU-039</span> (caso U'wa): la colma por integración; unifica criterio entre salas y declara la consulta previa <b>derecho fundamental</b> integrado al bloque de constitucionalidad.</div></div>
+          <div class="item gap"><div class="yr">laguna persiste</div><div class="desc">la doctrina ya existe, pero sigue sin ser ley: el Congreso no ha regulado el procedimiento.</div></div>
+        </div>
+        <div class="tlcol">
+          <div class="item"><div class="yr">2008</div><div class="desc"><span class="case">C-030</span> (Ley Forestal) y <span class="case">C-461</span> (PND 2006-2010): control abstracto → efectos <b><i>erga omnes</i></b>; por primera vez la omisión de consulta tumba leyes enteras con fuerza vinculante general.</div></div>
+          <div class="item"><div class="yr">2015</div><div class="desc"><span class="case">Ley 1753</span> (PND 2014-2018), art. 111: el Legislativo, ya advertido, protocoliza los acuerdos de consulta <i>ad hoc</i> para blindar <b>esta</b> ley —no regula el derecho en general, solo obedece caso a caso.</div></div>
+          <div class="item"><div class="yr">2016</div><div class="desc"><span class="case">C-035:</span> incluso haciendo la tarea, la Corte vuelve a condicionar la exequibilidad de otro artículo de la misma ley —la reacción defensiva sigue siendo incompleta.</div></div>
+          <div class="item gap"><div class="yr">vacío estructural</div><div class="desc">hoy (2026) sigue sin existir la ley estatutaria que ordena el art. 152 C.P.; los intentos legislativos (2018, entre otros) no han prosperado.</div></div>
+          <div class="item gap"><div class="yr">presente</div><div class="desc">la fuente subsidiaria (jurisprudencia constitucional) ocupa <i>de facto</i> el lugar de la fuente principal ausente, bajo la presión constante de que el Congreso finalmente legisle.</div></div>
+        </div>
       </div>
-      <div class="points">
-        <div class="point"><span class="mk fill"></span><p>Bajo el asimilacionismo <b>no había laguna</b>: un sistema que concibe al indígena como incapaz es coherente al no consultarlo. La laguna nace en 1991, cuando cambia la base axiológica sin proveer el procedimiento. <span class="ref">(Bobbio, 1994)</span></p></div>
-        <div class="point"><span class="mk"></span><p>Dos agravantes: la <b>ley estatutaria</b> (art. 152) lleva más de tres décadas en mora, y el <span class="case">Decreto 1320/1998</span> fue inaplicado por inconstitucional y objetado por la propia OIT.</p></div>
-      </div>
-      <p class="note-line">La vieja arquitectura de la incapacidad solo cayó con la <span class="case">C-139/1996</span>, que declaró inexequibles los arts. 1, 5 y 40 de la Ley 89.</p>
     </div>
     <div class="notes" hidden>
-      <p class="say">«El punto técnico más fino del trabajo está en el rombo punteado: ahí, y solo ahí, aparece la laguna.»</p>
+      <p class="say">«Los nodos punteados son la clave: la laguna aparece en 1991 y nunca termina de cerrarse.»</p>
       <ul>
-        <li>Antes de 1991 no faltaban normas —sobraban, todas desde la incapacidad (<span class="case">Ley 89 de 1890</span>, el indígena como menor de edad).</li>
-        <li>El sistema viejo era coherente: si es incapaz, no consultarlo tiene lógica. La laguna nace cuando cambia el <b>valor</b> (sujeto que participa) y no llega el <b>procedimiento</b>. Es una laguna <i>técnica</i> <span class="case">(Bobbio, 1994)</span>.</li>
-        <li>Se agrava: 30+ años sin ley estatutaria y el único decreto reglamentario, tumbado y criticado por la OIT.</li>
+        <li>Antes de 1991 no faltaban normas —sobraban, todas desde la incapacidad (<span class="case">Ley 89 de 1890</span>). La laguna <i>técnica</i> nace cuando cambia el valor (sujeto que participa) sin llegar el procedimiento <span class="case">(Bobbio, 1994)</span>.</li>
+        <li>Fíjate en la fuerza de las decisiones: <span class="case">T-380</span> y <span class="case">SU-039</span> son tutelas (<i>inter partes</i>); en <b>2008</b> <span class="case">(C-030, C-461)</span> el control abstracto da efectos <i>erga omnes</i> y por fin tumba leyes con fuerza general.</li>
+        <li>El Congreso solo reacciona caso a caso (<span class="case">Ley 1753</span>, 2015), y la Corte vuelve a condicionar (<span class="case">C-035</span>, 2016): parcheo, no regulación.</li>
+        <li>Remate para la tesis: en 2026 aún no existe la ley estatutaria del art. 152. La jurisprudencia (fuente subsidiaria) ocupa el lugar de la ley ausente —eso es plenitud por integración, no por previsión.</li>
       </ul>
     </div>
   </section>
